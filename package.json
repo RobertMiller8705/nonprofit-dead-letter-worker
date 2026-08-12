@@ -1,0 +1,1 @@
+{"scripts":{"test":"tsx test/dead_letter_jobs.test.ts","start":"tsx src/run_worker.ts"},"devDependencies":{"tsx":"^4.19.0"},"type":"module"}

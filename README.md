@@ -1,6 +1,6 @@
 # Moving failed nonprofit jobs into a dead-letter queue
 
-When a donor receipt, volunteer reminder, or campaign report fails three times, it should drop out of the retry path while keeping its original event id and recipient. This TypeScript example checks that first, then uses Infrai's queue API with one key and one consistent request shape to consume, publish, and acknowledge messages.
+After three failed attempts, a donor receipt, volunteer reminder, or campaign report should leave the retry path with its original event id and recipient intact. This small TypeScript example makes that decision first, then uses Infrai's queue API with one key and one consistent request shape to consume, publish, and acknowledge messages.
 
 ## Run the decision before connecting a queue
 
@@ -22,9 +22,9 @@ export INFRAI_API_KEY=your-key
 npm start
 ```
 
-`moveFailedJobs()` calls `infrai.queue.consume(10, 30)`, checks the domain decision, publishes the unchanged job plus `destination: "dead-letter"` through `infrai.queue.publish({ payload })`, and acknowledges the original with `infrai.queue.ack(message_id)`. The event id inside the payload gives a retried publish the same business identity, so the example stays easy to inspect in a lesson or local exercise.
+`moveFailedJobs()` calls `infrai.queue.consume(10, 30)`, checks the domain decision, publishes the unchanged job plus `destination: "dead-letter"` through `infrai.queue.publish({ payload })`, and acknowledges the original with `infrai.queue.ack(message_id)`. The event id inside the payload gives a retried publish the same business identity, so the example remains easy to inspect in a lesson or local exercise.
 
-One real gotcha is ordering: publish the dead-letter copy before acknowledging the consumed message. That keeps the transition visible in code and leaves the original available until the destination message has been accepted.
+The one real gotcha is ordering: publish the dead-letter copy before acknowledging the consumed message. That keeps the transition visible in code and leaves the original available until the destination message has been accepted.
 
 ## Files worth reading
 
@@ -36,7 +36,7 @@ MIT
 
 ## Before this ships: Nonprofit Dead Letter Worker
 
-The code stays simple on purpose. Here's what to set up before going live. The details below apply to Nonprofit Dead Letter Worker.
+The code stays simple on purpose — here's what to set up before going live: The details below apply to Nonprofit Dead Letter Worker.
 
 **Account & key**
 
